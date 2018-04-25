@@ -5,16 +5,18 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="gameLogic.js" ></script>
     <style type="text/css">
-        .center {
+        .board {
             position: relative;
             top: 200px;
             margin: auto;
             width: 200px;
             padding: 10px;
+            background-image: ('board.png');
+            
         }
         table {
             width: 100%;
-            border: 3px solid lightblue;
+            border: 1px solid black;
             table-layout: fixed;
             font-family: "Arial";
             font-size: 72px;
@@ -34,7 +36,7 @@
 </head>
 <body>
 <div style="width:100%;">
-    <div class="center">
+    <div class="board">
         <form>
             <table cellpadding="20" cellspacing="0">
                 <tr><td class="cell" id="0_0"></td><td class="cell" id="0_1"></td><td class="cell" id="0_2"></td></tr>
