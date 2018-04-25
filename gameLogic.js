@@ -70,7 +70,7 @@ function evaluatePossibleGames(matrix, currentFigure, evaluation, movesCount ) {
             for( var c=0; c < matrix.length; c++ ) {
                 var matrixCopy = copyMatrix( matrix );
                 var moves = movesCount;
-                if(false) {// matrixCopy[r][c] == '' && isOpponentsTurn(currentFigure) && (countOccupiedFields(matrixCopy) < totalFields - 1) && deadField(matrixCopy,r,c) ) {
+                if( matrixCopy[r][c] == '' && isOpponentsTurn(currentFigure) && (countOccupiedFields(matrixCopy) < totalFields - 1) && deadField(matrixCopy,r,c) ) {
                     // don't evaluate games with not clever moves...
                     continue;
                 }
