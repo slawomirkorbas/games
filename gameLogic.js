@@ -50,7 +50,7 @@ function evaluatePossibleGames(matrix, currentFigure, evaluation, movesCount ) {
     else if( gameResult == COMPUTER_WIN ) {
         if( movesCount == 1 ) {
            // test  
-            evaluation.pts += (1 + emptyFieldsLeft(matrix));
+            evaluation.pts += 100;
         }
         else {
             evaluation.pts += (1 + emptyFieldsLeft(matrix));
