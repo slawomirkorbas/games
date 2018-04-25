@@ -51,6 +51,8 @@ function evaluatePossibleGames(matrix, currentFigure, evaluation, movesCount ) {
         if( movesCount == 2 ) {
             
         }
+        else if (movesCount == 1 ) {
+            evaluation.pts += 100;
         else {
             evaluation.pts += (1 + emptyFieldsLeft(matrix));
         }
