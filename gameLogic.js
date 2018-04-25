@@ -48,7 +48,7 @@ function evaluatePossibleGames(matrix, currentFigure, evaluation, movesCount ) {
         }
     }
     else if( gameResult == COMPUTER_WIN ) {
-        if( movesCount == 2 ) {
+        if( movesCount == 1 ) {
            // test  
             evaluation.pts += (1 + emptyFieldsLeft(matrix));
         }
