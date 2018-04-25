@@ -44,7 +44,7 @@ function evaluatePossibleGames(matrix, currentFigure, evaluation, movesCount ) {
             // 2 means we are losing in the next opponents move - this should be avoided game solution so we give it -100
             evaluation.pts -= 100;
         }
-        else if( movesCount = 3 ) {
+        else if( movesCount == 3 ) {
             evaluation.pts -= 50;    
         } else {
             evaluation.pts -= (1 + emptyFieldsLeft(matrix));
