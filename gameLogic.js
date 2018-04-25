@@ -49,13 +49,7 @@ function evaluatePossibleGames(matrix, currentFigure, evaluation, movesCount ) {
         }
     }
     else if( gameResult == COMPUTER_WIN ) {
-        if( movesCount == 3 ) {
-            // 3 means computer is able to win in the next move - this should be recommended game solution so we give it +10
-            evaluation.pts += (1 + emptyFieldsLeft(matrix));
-        }
-        else {
-            evaluation.pts += (1 + emptyFieldsLeft(matrix));
-        }
+        evaluation.pts += (1 + emptyFieldsLeft(matrix));
         evaluation.movesTotal += movesCount;
         evaluation.wins++;
     }
@@ -70,7 +64,7 @@ function evaluatePossibleGames(matrix, currentFigure, evaluation, movesCount ) {
             for( var c=0; c < matrix.length; c++ ) {
                 var matrixCopy = copyMatrix( matrix );
                 var moves = movesCount;
-                if( matrixCopy[r][c] == '' && isOpponentsTurn(currentFigure) && (countOccupiedFields(matrixCopy) < totalFields - 1) && deadField(matrixCopy,r,c) ) {
+                if( false) { //matrixCopy[r][c] == '' && isOpponentsTurn(currentFigure) && (countOccupiedFields(matrixCopy) < totalFields - 1) && deadField(matrixCopy,r,c) ) {
                     // don't evaluate games with not clever moves...
                     continue;
                 }
