@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NoughtsAndCrosses - evaluation</title>
+    <script src="jquery-3.3.1.min.js" ></script>
+    <script src="gameLogic.js" ></script>
+    <style type="text/css">
+        .center {
+            position: relative;
+            top: 200px;
+            margin: auto;
+            width: 200px;
+            padding: 10px;
+        }
+        table {
+            width: 100%;
+            border: 3px solid lightblue;
+            table-layout: fixed;
+            font-family: "Arial";
+            font-size: 72px;
+        }
+        .cell {
+            border: 3px solid lightblue;
+            cursor: pointer;
+            width: 80px;
+            height: 85px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .cell:hover {
+            background-color: lightcyan;
+        }
+    </style>
+</head>
+<body>
+<div style="width:100%;">
+    <div class="center">
+        <form>
+            <table cellpadding="20" cellspacing="0">
+                <tr><td class="cell" id="0_0"></td><td class="cell" id="0_1"></td><td class="cell" id="0_2"></td></tr>
+                <tr><td class="cell" id="1_0"></td><td class="cell" id="1_1"></td><td class="cell" id="1_2"></td></tr>
+                <tr><td class="cell" id="2_0"></td><td class="cell" id="2_1"></td><td class="cell" id="2_2"></td></tr>
+            </table>
+            <br/>
+            <button onclick="clearGrid()">New game</button>
+        </form>
+    </div>
+</div>
+</body>
+<script>
+var matrix = [ ['','',''], ['','',''], ['','',''] ];
+function clearGrid() {
+    matrix.length = 0;
+    matrix = [ ['','',''], ['','',''], ['','',''] ];
+    redraw();
+}
+$( document ).ready(function() {
+    $(".cell").each(function(index) {
+        $(this).click( function() {
+            setCell($(this));
+        });
+    });
+    redraw();
+});
+function setCell(cell) {
+    var rc = cell.attr('id').split('_');
+    var row = rc[0];
+    var col = rc[1];
+    if( matrix[row][col] == '' ) {
+        matrix[row][col] = 'O';
+        redraw();
+        setTimeout(function(){ continueGame(matrix); }, 700);
+    }
+}
+function redraw() {
+    for( var row = 0; row < matrix.length; row++ ) {
+        for( var col = 0; col < matrix.length; col++ ) {
+            $('#' + row + "_" + col).html(matrix[row][col]);
+            $('#' + row + "_" + col).css('color', matrix[row][col] == 'X' ? 'darkred' : 'darkgreen' );
+        }
+    }
+}
+function continueGame(matrix) {
+    var computerFigure = 'X'; // let's assume computer is playing with crosses
+    var move = findBestMove( matrix, computerFigure );
+    if( move != null ) {
+        matrix[ move.row ][ move.col ]  = computerFigure;
+        redraw();
+    }
+}
+</script>
+</html>
