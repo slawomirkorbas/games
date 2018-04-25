@@ -30,23 +30,24 @@
             vertical-align: middle;
         }
         .cell:hover {
-            background-color: lightcyan;
+            border: 3px solid gray;
         }
     </style>
 </head>
 <body>
-<div style="width:100%;">
+<div style="width:100%; top: 200px;">
+    <form>
     <div class="board">
-        <form>
+
             <table cellpadding="20" cellspacing="0">
                 <tr><td class="cell" id="0_0"></td><td class="cell" id="0_1"></td><td class="cell" id="0_2"></td></tr>
                 <tr><td class="cell" id="1_0"></td><td class="cell" id="1_1"></td><td class="cell" id="1_2"></td></tr>
                 <tr><td class="cell" id="2_0"></td><td class="cell" id="2_1"></td><td class="cell" id="2_2"></td></tr>
             </table>
-            <br/>
-            <button onclick="clearGrid()">New game</button>
-        </form>
     </div>
+    <br/><br/>
+        <button style="width: 150px; height: 40px; font-weight:bold;" onclick="clearGrid()">New game</button>
+    </form>
 </div>
 </body>
 <script>
