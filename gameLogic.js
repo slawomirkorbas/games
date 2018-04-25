@@ -50,8 +50,8 @@ function evaluatePossibleGames(matrix, currentFigure, evaluation, movesCount ) {
     }
     else if( gameResult == COMPUTER_WIN ) {
         if( movesCount == 3 ) {
-            // 3 means computer is able to win in the next move - this should be recommended game solution so we give it +100
-            evaluation.pts += 100;
+            // 3 means computer is able to win in the next move - this should be recommended game solution so we give it +10
+            evaluation.pts += 10;
         }
         else {
             evaluation.pts += (1 + emptyFieldsLeft(matrix));
