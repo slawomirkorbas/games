@@ -170,3 +170,4 @@ function copyMatrix( matrix ) {
         }
     }
     return matrixCopy;
+}
