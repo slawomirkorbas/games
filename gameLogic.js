@@ -1,7 +1,5 @@
 var totalFields = 9;//matrix.length * matrix.length;
-var winCount = 3;
 var COMPUTER_WIN = 1;
-var DRAW = 0;
 var COMPUTER_LOST = -1;
 var NOT_FINISHED = 728;
 
@@ -12,20 +10,22 @@ var NOT_FINISHED = 728;
  * @param computerFigure
  * @returns {{row: number, col: number}}
  */
-function findBestMove(matrix, computerFigure) {
-    console.log("------------------------------");
+function findBestMove(matrix, figure) {
     var bestMove = null;
-    var bestResult = -1000000;
+    var maxPts = null;
     for( var r=0; r < matrix.length; r++ ) {
         for( var c=0; c < matrix.length; c++ ) {
             if( matrix[r][c] == '' ) {
                 var matrixCopy = copyMatrix( matrix );
-                matrixCopy[r][c] = computerFigure;
-                var eval = { games: 0, pts: 0, wins: 0, draws: 0, loses: 0, movesTotal: 0 };
-                eval = evaluatePossibleGames( matrixCopy, toggle(computerFigure), eval, 1 );
-                console.log( "Evaluation for: (" + r + "," + c +") games(" + eval.games + ") wins(" + eval.wins + ") loses(" + eval.loses + ") draws(" + eval.draws + ")  pts=" + eval.pts + ", movesTotal=" + eval.movesTotal );
-                if( eval.pts > bestResult ) {
-                    bestResult = eval.pts;
+                matrixCopy[r][c] = figure;
+                var pts = evaluateGames( matrixCopy, toggle(figure), 0 );
+                console.log( "Evaluation for: (" + r + "," + c +", pts=" + eval );
+                if( maxPts == null ) {
+                    maxPts = pts;
+                    bestMove = { row: r, col: c };
+                }
+                else if( pts > maxPts ) {
+                    maxPts = pts;
                     bestMove = { row: r, col: c };
                 }
             }
@@ -34,129 +34,44 @@ function findBestMove(matrix, computerFigure) {
     return bestMove;
 }
 
-function evaluatePossibleGames(matrix, currentFigure, evaluation, movesCount ) {
+function evaluateGames(matrix, figure, result) {
+    var min = null;
+    var max = null;
     var gameResult = gameState(matrix);
     if( gameResult == COMPUTER_LOST ) {
-        evaluation.games += 1;
-        evaluation.loses++;
-        evaluation.movesTotal += movesCount;
-        if( movesCount == 2 ) {
-            // 2 means we are losing in the next opponents move - this should be avoided game solution so we give it -100
-            evaluation.pts -= 100;
-        } else {
-            evaluation.pts -= (1 + emptyFieldsLeft(matrix));
-        }
+        result = -10;
     }
     else if( gameResult == COMPUTER_WIN ) {
-        if( movesCount == 1 ) {
-           // test  
-            evaluation.pts += 100;
-        }
-        else {
-            evaluation.pts += (1 + emptyFieldsLeft(matrix));
-        }
-        evaluation.movesTotal += movesCount;
-        evaluation.wins++;
+        result = 10;
     }
     else if( matrixFull(matrix) ) {
-        evaluation.draws++;
-        evaluation.pts += 0;
-        evaluation.games += 1;
-        evaluation.movesTotal += movesCount;
+        result = 0;
     }
     else if( gameResult == NOT_FINISHED ) {
         for( var r=0; r < matrix.length; r++ ) {
             for( var c=0; c < matrix.length; c++ ) {
                 var matrixCopy = copyMatrix( matrix );
-                if( matrixCopy[r][c] == '' && isOpponentsTurn(currentFigure) && (countOccupiedFields(matrixCopy) < totalFields - 1) && deadField(matrixCopy,r,c) ) {
-                    // don't evaluate games with not clever moves...
-                    continue;
-                }
-                else  if( matrixCopy[r][c] == '') {
-                    matrixCopy[r][c] = currentFigure;
-                    evaluation = evaluatePossibleGames(matrixCopy, toggle(currentFigure), evaluation, movesCount + 1 );
+                if( matrixCopy[r][c] == '') {
+                    matrixCopy[r][c] = figure;
+                    var pts = evaluateGames(matrixCopy, toggle(figure), result);
+                    min = min == null ? pts : min;
+                    max = max == null ? pts : max;
+                    if( pts < min )  {
+                        min = pts;
+                    }
+                    else if( pts > max )  {
+                        max = pts;
+                    }
                 }
             }
         }
+        result += ( isOpponentsTurn(figure) ? min : max );
     }
-
-    return evaluation;
+    return result;
 }
 
 function isOpponentsTurn(currentFigure) {
     return  currentFigure == 'O';
-}
-
-deadField = function (matrix, r, c) {
-    var vDead = verticalCheck(matrix, r, c);
-    var hDead = horizontalCheck(matrix, r, c);
-    var dDead_1 = diagonalPathCheck( matrix, r, c, true );
-    var dDead_2 = diagonalPathCheck( matrix, r, c, false );
-
-    //console.log( "dead = " + (hDead && vDead && dDead_1 && dDead_2) );
-    return (hDead && vDead && dDead_1 && dDead_2);
-}
-
-horizontalCheck = function (matrix, r, c) {
-    var hDead = false;
-    var col = 0;
-    while( col >= 0 && col < matrix.length ) {
-        if( matrix[r][col] == 'X' ) {
-            hDead = true;
-            break;
-        }
-        col++;
-    }
-    return hDead;
-}
-
-verticalCheck = function(matrix, r, c) {
-    var vDead = false;
-    var row = 0;
-    while( row >= 0 && row < matrix.length ) {
-        if( matrix[row][c] == 'X' ) {
-            vDead = true;
-            break;
-        }
-        row++;
-    }
-    return vDead;
-}
-
-diagonalPathCheck = function ( matrix, r, c, topLeft2BottomRight ) {
-    var dDead = false;
-    var row = r;
-    var col = c;
-    var checkedCount = 0;
-    var forward = true;
-    while( checkedCount < winCount ) {
-        if( row >= 0 && row < matrix.length && col >= 0 && col < matrix.length ) {
-            if( matrix[row][col] == 'X' ) {
-                dDead = true;
-                break;
-            }
-            checkedCount++;
-        }
-        else if( forward == false && checkedCount < winCount ) {
-            dDead = true;
-            break;
-        }
-        else {
-            // back to initial pos and change direction of checking...
-            row = r;
-            col = c;
-            forward = false;
-        }
-        if( topLeft2BottomRight ) {
-            row += forward ? 1 : -1;
-            col += forward ? 1 : -1;
-        }
-        else {   // bottomLeft2TopRight
-            row += forward ? -1 :  1;
-            col += forward ?  1 : -1;
-        }
-    }
-    return dDead;
 }
 
 function toggle(figure) {
@@ -165,7 +80,6 @@ function toggle(figure) {
 
 
 /**
- * Checks
  * @param matrix
  * @param figure
  * @returns  0 - game is not finished, 1 - 'X' has won, -1 - 'O' has won
@@ -243,18 +157,6 @@ function countOccupiedFields(matrix) {
     return count;
 }
 
-function emptyFieldsLeft(matrix) {
-    var emptyFields = 0;
-    for( var r=0; r < matrix.length; r++ ) {
-        for( var c=0; c < matrix.length; c++ ) {
-            if( matrix[r][c] == '' ) {
-                emptyFields++;
-            }
-        }
-    }
-    return  emptyFields;
-}
-
 /**
  * Copies arrays - deep copy of two dimensional array
  * @param matrix
@@ -268,4 +170,3 @@ function copyMatrix( matrix ) {
         }
     }
     return matrixCopy;
-}
