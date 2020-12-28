@@ -1,39 +1,56 @@
 var totalFields = 9;//matrix.length * matrix.length;
 var COMPUTER_WIN = 1;
 var COMPUTER_LOST = -1;
+var DRAW = 0;
 var NOT_FINISHED = 728;
-
+var computerFigure;
 
 /**
  * Return null if there is no move possible as the matrix is full.
  * @param matrix
  * @param computerFigure
- * @returns {{row: number, col: number}}
+ * @returns {state: number, {row: number, col: number}}
  */
-function findBestMove(matrix, figure) {
-    var bestMove = null;
-    var maxPts = null;
-    for( var r=0; r < matrix.length; r++ ) {
-        for( var c=0; c < matrix.length; c++ ) {
-            if( matrix[r][c] == '' ) {
-                var matrixCopy = copyMatrix( matrix );
-                matrixCopy[r][c] = figure;
-                var pts = evaluateGames( matrixCopy, toggle(figure), 0 );
-                console.log( "Evaluation for: (" + r + "," + c +", pts=" + eval );
-                if( maxPts == null ) {
-                    maxPts = pts;
-                    bestMove = { row: r, col: c };
-                }
-                else if( pts > maxPts ) {
-                    maxPts = pts;
-                    bestMove = { row: r, col: c };
+function doBestMove(matrix, figure) {
+    computerFigure = figure;
+    var result = { nextMove: null, state: null};
+    result.state = gameState(matrix);
+    if( result.state == NOT_FINISHED) {
+        var maxPts = null;
+        for (var r = 0; r < matrix.length; r++) {
+            for (var c = 0; c < matrix.length; c++) {
+                if (matrix[r][c] == '') {
+                    var matrixCopy = copyMatrix(matrix);
+                    matrixCopy[r][c] = figure;
+                    var pts = evaluateGames(matrixCopy, toggle(figure), 0);
+                    //console.log("Evaluation for: (" + r + "," + c + ", pts=" + eval);
+                    if (maxPts == null) {
+                        maxPts = pts;
+                        result.nextMove = {row: r, col: c};
+                    } else if (pts > maxPts) {
+                        maxPts = pts;
+                        result.nextMove = {row: r, col: c};
+                    }
                 }
             }
         }
+        // set the figure
+        if(result.nextMove != null) {
+            matrix[result.nextMove.row][result.nextMove.col] = figure;
+        }
+        // update game state again
+        result.state = gameState(matrix);
     }
-    return bestMove;
+    return result;
 }
 
+/**
+ * Evaluate all possible games from given point (game state) and calculate total sore for each of them
+ * @param matrix
+ * @param figure
+ * @param result
+ * @returns {number}
+ */
 function evaluateGames(matrix, figure, result) {
     var min = null;
     var max = null;
@@ -44,7 +61,7 @@ function evaluateGames(matrix, figure, result) {
     else if( gameResult == COMPUTER_WIN ) {
         result = 10;
     }
-    else if( matrixFull(matrix) ) {
+    else if( gameResult == DRAW ) {
         result = 0;
     }
     else if( gameResult == NOT_FINISHED ) {
@@ -71,7 +88,7 @@ function evaluateGames(matrix, figure, result) {
 }
 
 function isOpponentsTurn(currentFigure) {
-    return  currentFigure == 'O';
+    return  currentFigure != computerFigure;
 }
 
 function toggle(figure) {
@@ -82,7 +99,7 @@ function toggle(figure) {
 /**
  * @param matrix
  * @param figure
- * @returns  0 - game is not finished, 1 - 'X' has won, -1 - 'O' has won
+ * @returns  0 - DRAW, 1 - 'X' has won, -1 - 'O' has won
  */
 function gameState( matrix ) {
     // horizontal scan...
@@ -92,9 +109,10 @@ function gameState( matrix ) {
             countX = matrix[r][c] == 'X' ? countX + 1 : 0;
             countO = matrix[r][c] == 'O' ? countO + 1 : 0;
         }
-        if( countX == winCount || countO == winCount) {
-            return countX == winCount ? COMPUTER_WIN : COMPUTER_LOST;
-        }
+        if(countX == winCount )
+            return computerFigure == 'X' ? COMPUTER_WIN : COMPUTER_LOST;
+        if(countO == winCount )
+            return computerFigure == 'O' ? COMPUTER_WIN : COMPUTER_LOST;
         countX = countO = 0;
     }
     //vertical scan...
@@ -104,9 +122,10 @@ function gameState( matrix ) {
             countX = matrix[r][c] == 'X' ? countX + 1 : 0;
             countO = matrix[r][c] == 'O' ? countO + 1 : 0;
         }
-        if( countX == winCount || countO == winCount) {
-            return countX == winCount ? COMPUTER_WIN : COMPUTER_LOST;
-        }
+        if(countX == winCount )
+            return computerFigure == 'X' ? COMPUTER_WIN : COMPUTER_LOST;
+        if(countO == winCount )
+            return computerFigure == 'O' ? COMPUTER_WIN : COMPUTER_LOST;
         countX = countO = 0;
     }
     //diagonal scan left top
@@ -119,9 +138,10 @@ function gameState( matrix ) {
         for( var x=colStart, y=rowStart; x < matrix.length && y < matrix.length; x++, y++ ) {
             countX = matrix[x][y] == 'X' ? countX + 1 : 0;
             countO = matrix[x][y] == 'O' ? countO + 1 : 0;
-            if( countX == winCount || countO == winCount) {
-                return countX == winCount ? COMPUTER_WIN : COMPUTER_LOST;
-            }
+            if(countX == winCount )
+                return computerFigure == 'X' ? COMPUTER_WIN : COMPUTER_LOST;
+            if(countO == winCount )
+                return computerFigure == 'O' ? COMPUTER_WIN : COMPUTER_LOST;
         }
         countX = countO = 0;
     }
@@ -133,11 +153,17 @@ function gameState( matrix ) {
         for( var x=colStart, y=rowStart; x < matrix.length && y < matrix.length; x--, y++ ) {
             countX = matrix[x][y] == 'X' ? countX + 1 : 0;
             countO = matrix[x][y] == 'O' ? countO + 1 : 0;
-            if( countX == winCount || countO == winCount) {
-                return countX == winCount ? COMPUTER_WIN : COMPUTER_LOST;
-            }
+            if(countX == winCount )
+                return computerFigure == 'X' ? COMPUTER_WIN : COMPUTER_LOST;
+            if(countO == winCount )
+                return computerFigure == 'O' ? COMPUTER_WIN : COMPUTER_LOST;
         }
         countX = countO = 0;
+    }
+
+    if( countOccupiedFields(matrix) == totalFields)
+    {
+        return DRAW;
     }
     return NOT_FINISHED;    // game is not over or matrix is full...
 }
