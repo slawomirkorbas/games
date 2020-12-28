@@ -13,6 +13,7 @@ var computerFigure;
  */
 function doBestMove(matrix, figure) {
     computerFigure = figure;
+    var bestMoves = [];
     var result = { nextMove: null, state: null};
     result.state = gameState(matrix);
     if( result.state == NOT_FINISHED) {
@@ -24,24 +25,35 @@ function doBestMove(matrix, figure) {
                     matrixCopy[r][c] = figure;
                     var pts = evaluateGames(matrixCopy, toggle(figure), 0);
                     //console.log("Evaluation for: (" + r + "," + c + ", pts=" + eval);
-                    if (maxPts == null) {
+                    if (maxPts == null || pts == maxPts) {
                         maxPts = pts;
-                        result.nextMove = {row: r, col: c};
+                        bestMoves[bestMoves.length] = {row: r, col: c};
                     } else if (pts > maxPts) {
                         maxPts = pts;
-                        result.nextMove = {row: r, col: c};
+                        bestMoves.length = 0;
+                        bestMoves[bestMoves.length] = {row: r, col: c};
                     }
                 }
             }
         }
-        // set the figure
-        if(result.nextMove != null) {
+        if(bestMoves.length > 0) {
+            result.nextMove = bestMoves[ randomInt(0, bestMoves.length - 1) ];
             matrix[result.nextMove.row][result.nextMove.col] = figure;
         }
         // update game state again
         result.state = gameState(matrix);
     }
     return result;
+}
+
+/**
+ * Returns random integer number form given range
+ * @param min
+ * @param max
+ * @returns {*}
+ */
+function randomInt(min, max) {
+    return min + Math.floor((max - min) * Math.random());
 }
 
 /**
@@ -165,7 +177,7 @@ function gameState( matrix ) {
     {
         return DRAW;
     }
-    return NOT_FINISHED;    // game is not over or matrix is full...
+    return NOT_FINISHED;    // game is not over
 }
 
 function matrixFull(matrix) {

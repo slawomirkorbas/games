@@ -39,7 +39,7 @@
     <div class="col-md-8 offset-md-2">
         <h1>Tic-Tac-Toe - min max algorithm test</h1>
         <div class="row">
-            <div class="col-3">
+            <div class="col-3 align-items-center">
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="figureSelect" id="playModeX" value="X" checked>
                     <label class="form-check-label" for="playModeX">Play as X</label>
@@ -50,6 +50,10 @@
                 </div>
             </div>
             <div class="col-4 align-items-center">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="true" id="computerStarts" name="computerStarts">
+                    <label class="form-check-label" for="computerStarts">Computer first</label>
+                </div>
                 <button class="btn-sm btn-primary" type="button" onclick="newGame()">New game</button>
             </div>
         </div>
@@ -89,15 +93,20 @@
     var userFigure = 'X';
     var gameOver = false;
     var engineIsThinking = false;
+    var computerStarts = false;
     var matrix = [ ['','',''], ['','',''], ['','',''] ];
 
     function newGame() {
         userFigure = $("input[name='figureSelect']:checked").val();
+        computerStarts = $("input[name='computerStarts']:checked").val();
         gameOver = false;
         engineIsThinking = false;
         matrix.length = 0;
         matrix = [ ['','',''], ['','',''], ['','',''] ];
         redraw();
+        if(computerStarts) {
+            continueGame(matrix);
+        }
     }
 
     $( document ).ready(function() {
