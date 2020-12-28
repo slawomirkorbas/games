@@ -36,53 +36,53 @@
 </head>
 <body>
 <div class="container">
-    <h1>Tic-Tac-Toe - min max algorithm test</h1>
-
-    <div class="row">
-        <div class="col-3">
-            <table>
-                <tr>
-                    <td class="tttField border border-0" id="0_0"></td>
-                    <td class="tttField border border-top-0" id="0_1"></td>
-                    <td class="tttField border border-0" id="0_2"></td>
-                </tr>
-                <tr>
-                    <td class="tttField border border-left-0" id="1_0"></td>
-                    <td class="tttField border" id="1_1"></td>
-                    <td class="tttField border border-right-0" id="1_2"></td>
-                </tr>
-                <tr>
-                    <td class="tttField border border-0" id="2_0"></td>
-                    <td class="tttField border border-bottom-0" id="2_1"></td>
-                    <td class="tttField border border-0" id="2_2"></td>
-                </tr>
-            </table>
-        </div>
-        <div class="col-4">
-            <div class="row">
-                <div class="col">
-                    <button class="btn-sm btn-primary" type="button" onclick="newGame()">New game</button>
+    <div class="col-md-8 offset-md-2">
+        <h1>Tic-Tac-Toe - min max algorithm test</h1>
+        <div class="row">
+            <div class="col-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="figureSelect" id="playModeX" value="X" checked>
+                    <label class="form-check-label" for="playModeX">Play as X</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="figureSelect" id="playModeO" value="O" >
+                    <label class="form-check-label" for="playModeO">Play as O</label>
                 </div>
             </div>
-            <div class="row">
-                <div class="col">
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="figureSelect" id="playModeX" value="X" checked>
-                        <label class="form-check-label" for="playModeX">Play as as "X"</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="figureSelect" id="playModeO" value="O" >
-                        <label class="form-check-label" for="playModeO">Play as "O"</label>
-                    </div>
-                </div>
+            <div class="col-4 align-items-center">
+                <button class="btn-sm btn-primary" type="button" onclick="newGame()">New game</button>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col align-items-center">
+                <table>
+                    <tr>
+                        <td class="tttField border border-0" id="0_0"></td>
+                        <td class="tttField border border-top-0" id="0_1"></td>
+                        <td class="tttField border border-0" id="0_2"></td>
+                    </tr>
+                    <tr>
+                        <td class="tttField border border-left-0" id="1_0"></td>
+                        <td class="tttField border" id="1_1"></td>
+                        <td class="tttField border border-right-0" id="1_2"></td>
+                    </tr>
+                    <tr>
+                        <td class="tttField border border-0" id="2_0"></td>
+                        <td class="tttField border border-bottom-0" id="2_1"></td>
+                        <td class="tttField border border-0" id="2_2"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
 
-    <!--Copyright-->
-    <div class="footer-copyright py-3">
-        © 2020 Copyright: Slawomir Korbas
+        <!--Copyright-->
+        <div class="footer-copyright py-3">
+            © 2020 Copyright: Slawomir Korbas
+        </div>
     </div>
+</div>
+
+
 </div>
 </body>
 <script>
