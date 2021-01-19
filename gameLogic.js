@@ -68,10 +68,10 @@ function evaluateGames(matrix, figure, result) {
     var max = null;
     var gameResult = gameState(matrix);
     if( gameResult == COMPUTER_LOST ) {
-        result = -10;
+        result = -10 * countOccupiedFields(matrix);
     }
     else if( gameResult == COMPUTER_WIN ) {
-        result = 10;
+        result = 10 * countOccupiedFields(matrix);
     }
     else if( gameResult == DRAW ) {
         result = 0;
